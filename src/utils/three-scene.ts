@@ -48,7 +48,7 @@ export function createHeroScene(canvas: HTMLCanvasElement): ThreeScene {
   scene.add(pointLight3);
 
   // ── Toon Material helper ─────────────────────────────────────────────────────
-  function makeToon(color: number, steps = 4) {
+  function makeToon(color: number) {
     const gradient = new THREE.DataTexture(
       new Uint8Array([0, 60, 120, 180, 255]),
       5, 1,
