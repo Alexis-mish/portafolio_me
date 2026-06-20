@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './Navbar.css';
 
-const NAV_LINKS = [
-  { href: '#about', label: 'Sobre mí' },
-  { href: '#tech', label: 'Stack' },
-  { href: '#projects', label: 'Proyectos' },
-  { href: '#experience', label: 'Experiencia' },
-  { href: '#contact', label: 'Contacto' },
-];
-
 export default function Navbar() {
+  const { language, setLanguage, t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: '#about', label: t.navbar.about },
+    { href: '#tech', label: t.navbar.tech },
+    { href: '#projects', label: t.navbar.projects },
+    { href: '#experience', label: t.navbar.experience },
+    { href: '#contact', label: t.navbar.contact },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -29,7 +31,7 @@ export default function Navbar() {
         </a>
 
         <nav className={`navbar__nav ${menuOpen ? 'navbar__nav--open' : ''}`}>
-          {NAV_LINKS.map(({ href, label }) => (
+          {navLinks.map(({ href, label }) => (
             <a
               key={href}
               href={href}
@@ -39,8 +41,27 @@ export default function Navbar() {
               {label}
             </a>
           ))}
+
+          <div className="navbar__lang-switch">
+            <button
+              onClick={() => setLanguage('es')}
+              className={`navbar__lang-btn ${language === 'es' ? 'navbar__lang-btn--active' : ''}`}
+              aria-label="Cambiar a Español"
+            >
+              ES
+            </button>
+            <span className="navbar__lang-separator">|</span>
+            <button
+              onClick={() => setLanguage('en')}
+              className={`navbar__lang-btn ${language === 'en' ? 'navbar__lang-btn--active' : ''}`}
+              aria-label="Change to English"
+            >
+              EN
+            </button>
+          </div>
+
           <a href="#contact" className="navbar__cta" onClick={() => setMenuOpen(false)}>
-            Hablemos
+            {t.navbar.cta}
           </a>
         </nav>
 
@@ -55,3 +76,4 @@ export default function Navbar() {
     </header>
   );
 }
+

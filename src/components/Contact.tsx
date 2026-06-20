@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useLanguage } from '../context/LanguageContext';
 import './Contact.css';
+
 
 const SOCIALS = [
   {
@@ -55,6 +57,7 @@ const SOCIALS = [
 ];
 
 export default function Contact() {
+  const { t } = useLanguage();
   const sectionRef = useScrollAnimation() as React.MutableRefObject<HTMLElement>;
   const [copied, setCopied] = useState(false);
 
@@ -70,26 +73,25 @@ export default function Contact() {
   return (
     <section id="contact" className="section contact" ref={sectionRef as React.RefObject<HTMLElement>}>
       <div className="container">
-        <div className="section-label fade-in-up">Contacto</div>
+        <div className="section-label fade-in-up">{t.contact.label}</div>
         <h2 className="contact__title fade-in-up">
-          ¿Tienes un <span className="gradient-text">proyecto</span> en mente?
+          {t.contact.titleBefore}<span className="gradient-text">{t.contact.titleHighlight}</span>{t.contact.titleAfter}
         </h2>
         <p className="contact__subtitle fade-in-up">
-          Estoy disponible para proyectos freelance, colaboraciones y nuevas oportunidades.
-          No dudes en escribirme — respondo rápido.
+          {t.contact.subtitle}
         </p>
 
         <div className="contact__layout">
           {/* Email highlight */}
           <div className="contact__email-card fade-in-up">
-            <span className="contact__email-label">Email directo</span>
+            <span className="contact__email-label">{t.contact.emailLabel}</span>
             <div className="contact__email-row">
               <span className="contact__email-text">{EMAIL}</span>
               <button
                 id="copy-email-btn"
                 className={`contact__copy-btn ${copied ? 'copied' : ''}`}
                 onClick={copyEmail}
-                title="Copiar email"
+                title={copied ? t.contact.copiedBtn : t.contact.copyBtn}
               >
                 {copied ? (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
@@ -101,7 +103,7 @@ export default function Contact() {
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                   </svg>
                 )}
-                <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
+                <span>{copied ? t.contact.copiedBtn : t.contact.copyBtn}</span>
               </button>
             </div>
           </div>
@@ -122,7 +124,9 @@ export default function Contact() {
                   {social.icon}
                 </div>
                 <div className="contact__social-info">
-                  <span className="contact__social-name">{social.name}</span>
+                  <span className="contact__social-name">
+                    {social.name === 'Teléfono' ? t.contact.phoneLabel : social.name}
+                  </span>
                   <span className="contact__social-handle">{social.handle}</span>
                 </div>
                 <svg className="contact__social-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
@@ -140,7 +144,7 @@ export default function Contact() {
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
             </svg>
-            Enviar un mensaje
+            {t.contact.sendMsgBtn}
           </a>
         </div>
       </div>

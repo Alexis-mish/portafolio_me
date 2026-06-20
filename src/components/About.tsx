@@ -1,13 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useLanguage } from '../context/LanguageContext';
 import './About.css';
 
-const STATS = [
-  { value: 3, suffix: '+', label: 'Años programando' },
-  { value: 6, suffix: '+', label: 'Proyectos en producción' },
-  { value: 2, suffix: '', label: 'Certificaciones' },
-  { value: 16, suffix: '+', label: 'Tecnologías dominadas' },
-];
 
 function AnimatedCounter({ target, suffix, duration = 1600 }: { target: number; suffix: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,7 +36,18 @@ function AnimatedCounter({ target, suffix, duration = 1600 }: { target: number; 
 }
 
 export default function About() {
+  const { t } = useLanguage();
   const sectionRef = useScrollAnimation() as React.MutableRefObject<HTMLElement>;
+
+  function formatBold(text: string) {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  }
 
   return (
     <section id="about" className="section about" ref={sectionRef as React.RefObject<HTMLElement>}>
@@ -49,47 +55,41 @@ export default function About() {
         <div className="about__grid">
           {/* Left — Text */}
           <div className="about__text">
-            <div className="section-label fade-in-left">Sobre mí</div>
+            <div className="section-label fade-in-left">{t.about.label}</div>
             <h2 className="about__title fade-in-left">
-              Construyo con <span className="gradient-text">pasión</span>
-              <br />y atención al detalle
+              {t.about.titleBefore}<span className="gradient-text">{t.about.titleHighlight}</span>
+              <span style={{ whiteSpace: 'pre-line' }}>{t.about.titleAfter}</span>
             </h2>
 
+
             <p className="about__desc fade-in-left" style={{ transitionDelay: '0.1s' }}>
-              Soy <strong>Alexis Michell Hernandez Robledo</strong>, Ingeniero en Software
-              por la Universidad Politécnica del Estado de Nayarit. Tepic, Nayarit 🇲🇽
+              {formatBold(t.about.desc1)}
             </p>
 
             <p className="about__desc fade-in-left" style={{ transitionDelay: '0.18s' }}>
-              Me especializo en construir productos de principio a fin — desde el diseño de la
-              base de datos hasta el deploy en producción. He trabajado con LLMs, SaaS veterinarios,
-              sistemas POS y directorios SEO. Siempre buscando que el código sea limpio, escalable y con propósito.
+              {formatBold(t.about.desc2)}
             </p>
 
             <div className="about__highlights fade-in-left" style={{ transitionDelay: '0.26s' }}>
-              {[
-                'Arquitectura limpia y código mantenible',
-                'Integración de IA / LLMs en producción',
-                'Performance y SEO optimizados',
-                'Metodología Scrum — SFC Certified',
-              ].map((item) => (
+              {t.about.highlights.map((item) => (
                 <div key={item} className="about__highlight-item">
                   <svg viewBox="0 0 24 24" fill="none" width="15" height="15">
                     <path d="M20 6 9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <span>{item}</span>
+                   <span>{item}</span>
                 </div>
               ))}
             </div>
 
             <div className="about__languages fade-in-left" style={{ transitionDelay: '0.34s' }}>
-              <span className="lang-tag">🇲🇽 Español — Nativo</span>
-              <span className="lang-tag">🇺🇸 Inglés — B1 (iTEP)</span>
+              {t.about.langTags.map((lang) => (
+                <span key={lang} className="lang-tag">{lang}</span>
+              ))}
             </div>
 
             <a href="#contact" className="btn-primary fade-in-left"
               style={{ transitionDelay: '0.4s', display: 'inline-flex', width: 'fit-content', gap: '8px', marginTop: '4px' }}>
-              Contactar
+              {t.about.buttonContact}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
@@ -110,18 +110,18 @@ export default function About() {
               </div>
               <div className="about__avatar-info">
                 <span className="about__avatar-name">Alexis Hernandez</span>
-                <span className="about__avatar-title">Software Engineer</span>
-                <span className="about__avatar-loc">📍 Tepic, Nayarit</span>
+                <span className="about__avatar-title">{t.about.avatarTitle}</span>
+                <span className="about__avatar-loc">{t.about.avatarLoc}</span>
                 <div className="about__avatar-status">
                   <span className="status-dot" />
-                  <span>Disponible para proyectos</span>
+                  <span>{t.about.avatarStatus}</span>
                 </div>
               </div>
             </div>
 
             {/* Stats grid */}
             <div className="about__stats fade-in-up" style={{ transitionDelay: '0.15s' }}>
-              {STATS.map((stat) => (
+              {t.about.stats.map((stat) => (
                 <div key={stat.label} className="stat-card">
                   <span className="stat-card__value">
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />

@@ -1,7 +1,17 @@
+import { useLanguage } from '../context/LanguageContext';
 import './Footer.css';
 
 export default function Footer() {
+  const { t } = useLanguage();
   const year = new Date().getFullYear();
+
+  const footerLinks = [
+    { href: '#tech', label: t.navbar.tech },
+    { href: '#projects', label: t.navbar.projects },
+    { href: '#experience', label: t.navbar.experience },
+    { href: '#about', label: t.navbar.about },
+    { href: '#contact', label: t.navbar.contact },
+  ];
 
   return (
     <footer className="footer">
@@ -12,25 +22,26 @@ export default function Footer() {
             <span className="logo-name">AMH</span>
             <span className="logo-bracket">/&gt;</span>
           </span>
-          <span className="footer__tagline">Construido con React + Three.js + ☕</span>
+          <span className="footer__tagline">{t.footer.tagline}</span>
         </div>
 
         <div className="footer__nav">
-          {['Stack', 'Proyectos', 'Experiencia', 'Sobre mí', 'Contacto'].map((link) => (
+          {footerLinks.map((link) => (
             <a
-              key={link}
-              href={`#${link.toLowerCase().replace(' ', '-').replace('é', 'e')}`}
+              key={link.href}
+              href={link.href}
               className="footer__link"
             >
-              {link}
+              {link.label}
             </a>
           ))}
         </div>
 
         <p className="footer__copy">
-          © {year} Alexis Michell Hernandez Robledo. Todos los derechos reservados.
+          {t.footer.copy.replace('{year}', year.toString())}
         </p>
       </div>
     </footer>
   );
 }
+

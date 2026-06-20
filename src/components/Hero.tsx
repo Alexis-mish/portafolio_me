@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { createHeroScene } from '../utils/three-scene';
+import { useLanguage } from '../context/LanguageContext';
 import './Hero.css';
 
-const ROLES = ['Desarrollador Jr.', 'Frontend Developer', 'Software Engineer', 'Fullstack Dev'];
 
 export default function Hero() {
+  const { language, t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLSpanElement>(null);
   const roleRef = useRef<HTMLSpanElement>(null);
@@ -63,7 +64,8 @@ export default function Hero() {
 
     async function loop() {
       while (!cancelled) {
-        const role = ROLES[roleIdx.current % ROLES.length];
+        const roles = t.hero.roles;
+        const role = roles[roleIdx.current % roles.length];
         await typeText(role);
         await sleep(2200);
         await eraseText();
@@ -75,7 +77,7 @@ export default function Hero() {
     loop();
 
     return () => { cancelled = true; };
-  }, []);
+  }, [language]);
 
   // Name scramble on mount
   useEffect(() => {
@@ -129,17 +131,17 @@ export default function Hero() {
           <div className="hero__text">
             <div className="hero__badge">
               <span className="status-dot" />
-              <span>Disponible para proyectos</span>
+              <span>{t.hero.badge}</span>
             </div>
 
             <h1 className="hero__name">
-              <span className="hero__greeting">Hola, soy</span>
+              <span className="hero__greeting">{t.hero.greeting}</span>
               <span
                 ref={titleRef}
                 className="hero__name--accent"
-                data-text="Alexis Hernandez"
+                data-text={t.hero.name}
               >
-                Alexis Hernandez
+                {t.hero.name}
               </span>
             </h1>
 
@@ -149,20 +151,19 @@ export default function Hero() {
               <span className="cursor-blink" />
             </p>
 
-            <p className="hero__desc">
-              Ingeniería en Software · Tepic, Nayarit 🇲🇽<br />
-              Construyo interfaces y sistemas web que combinan diseño visual impactante
-              con arquitecturas sólidas. Especializado en React, Next.js y TypeScript.
+            <p className="hero__desc" style={{ whiteSpace: 'pre-line' }}>
+              {t.hero.desc}
             </p>
+
 
             <div className="hero__actions">
               <a href="#projects" className="btn-primary" id="hero-projects-btn">
-                <span>Ver proyectos</span>
+                <span>{t.hero.viewProjects}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </a>
-              <a href="#contact" className="btn-secondary" id="hero-contact-btn">Hablemos</a>
+              <a href="#contact" className="btn-secondary" id="hero-contact-btn">{t.hero.talk}</a>
             </div>
 
             <div className="hero__socials">
@@ -191,7 +192,7 @@ export default function Hero() {
       </div>
 
       <div className="hero__scroll-indicator">
-        <span>scroll</span>
+        <span>{t.hero.scroll}</span>
         <div className="scroll-line"><div className="scroll-dot" /></div>
       </div>
     </section>

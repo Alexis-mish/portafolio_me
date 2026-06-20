@@ -1,5 +1,7 @@
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useLanguage } from '../context/LanguageContext';
 import './TechStack.css';
+
 
 interface Tech {
   name: string;
@@ -135,18 +137,19 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function TechStack() {
+  const { t } = useLanguage();
   const sectionRef = useScrollAnimation() as React.MutableRefObject<HTMLElement>;
   const categories = [...new Set(TECHS.map((t) => t.category))] as string[];
 
   return (
     <section id="tech" className="section tech-stack" ref={sectionRef as React.RefObject<HTMLElement>}>
       <div className="container">
-        <div className="section-label fade-in-up">Stack Tecnológico</div>
+        <div className="section-label fade-in-up">{t.techStack.label}</div>
         <h2 className="tech-stack__title fade-in-up">
-          Tecnologías que <span className="gradient-text">domino</span>
+          {t.techStack.titleBefore}<span className="gradient-text">{t.techStack.titleHighlight}</span>
         </h2>
         <p className="tech-stack__subtitle fade-in-up">
-          Lenguajes, frameworks y herramientas con los que construyo productos de calidad.
+          {t.techStack.subtitle}
         </p>
 
         {/* Category filters — visual */}
@@ -157,7 +160,7 @@ export default function TechStack() {
               className="tech-cat-pill"
               style={{ '--cat-color': CATEGORY_COLORS[cat] } as React.CSSProperties}
             >
-              {cat}
+              {t.techStack.categories[cat as keyof typeof t.techStack.categories] || cat}
             </span>
           ))}
         </div>
@@ -178,7 +181,7 @@ export default function TechStack() {
                 className="tech-card__category"
                 style={{ color: CATEGORY_COLORS[tech.category] }}
               >
-                {tech.category}
+                {t.techStack.categories[tech.category as keyof typeof t.techStack.categories] || tech.category}
               </span>
               <div className="tech-card__glow" />
             </div>
@@ -187,11 +190,11 @@ export default function TechStack() {
 
         {/* Certifications strip */}
         <div className="tech-certs fade-in-up">
-          <span className="certs-label">Certificaciones</span>
+          <span className="certs-label">{t.techStack.certsLabel}</span>
           <div className="certs-list">
-            <span className="cert-badge">🏅 Scrum Fundamentals Certified (SFC)</span>
-            <span className="cert-badge">🟡 Lean Six Sigma White Belt</span>
-            <span className="cert-badge">🇺🇸 Inglés B1 – iTEP</span>
+            {t.techStack.certs.map((cert) => (
+              <span key={cert} className="cert-badge">{cert}</span>
+            ))}
           </div>
         </div>
       </div>
